@@ -1,15 +1,19 @@
 {
   "name": "react-comment",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "a comment component written in React.js",
   "main": "index.js",
   "scripts": {
     "babel": "babel lib --out-dir dist",
     "lessc": "lessc lib/style.less dist/style.css",
     "build": "npm run babel && npm run lessc"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newbienewbie/react-comment.git"
+  },
+  "keywords": ["react","comment"],
+  "author": "webbot@sina.com",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.24.1",
