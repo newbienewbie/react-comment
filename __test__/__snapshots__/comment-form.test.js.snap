@@ -1,0 +1,23 @@
+exports[`test《comment-form.js》 compare snapshot 1`] = `
+<form
+  className="comment-form">
+  <div>
+    <img
+      src="#" />
+    <textarea
+      onChange={[Function]}
+      placeholder="写下你的评论"
+      value="" />
+  </div>
+  <div>
+    <button
+      onClick={[Function]}>
+      取消
+    </button>
+    <button
+      onClick={[Function]}>
+      发表
+    </button>
+  </div>
+</form>
+`;
