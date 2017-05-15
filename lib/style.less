@@ -1,0 +1,81 @@
+.comment-item{
+    border:10px ;
+    margin: 0.6em 0;
+    background-color: wheat;
+
+    /* 评论头部：元信息 */
+    >div:first-child{
+
+        /* 作者信息 */
+        >div:first-child{
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: flex-start;
+
+            /* 头像 */
+            >div:first-child{
+                width:80px;
+                img{
+                    height: 80px;
+                    width:100%;
+                }
+            }
+            /* 作者名称、简介 */
+            >div:nth-child(2){
+                margin-left:1em;
+                /* 作者名称 */
+                >span a{
+                    font-size: 1.2em;
+                    font-weight: bolder;
+                }
+
+                /*简介*/
+                >div{
+                }
+            }
+        }
+
+        /* 统计信息 */
+        >div:nth-child(2){
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content:flex-start;
+            >div{
+                flex:20%;
+            }
+        }
+    }
+
+    /* 评论主体 */
+    >div:nth-child(2){
+        
+    }
+
+}
+
+.comment-form{
+
+    >div:first-child{
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: space-between;
+        
+        img{
+            height:80px;
+            width:80px;
+        }
+        textarea{
+            margin-left:1em;
+            width:100%;
+        }
+    }
+    >div:nth-child(2){
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: flex-end;
+    }
+}
