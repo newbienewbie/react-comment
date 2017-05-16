@@ -1,19 +1,22 @@
 {
   "name": "react-comment",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "a comment component written in React.js",
   "main": "index.js",
   "scripts": {
     "babel": "babel lib --out-dir dist",
     "lessc": "lessc lib/style.less dist/style.css",
     "build": "npm run babel && npm run lessc",
-    "test":"jest"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/newbienewbie/react-comment.git"
   },
-  "keywords": ["react","comment"],
+  "keywords": [
+    "react",
+    "comment"
+  ],
   "author": "webbot@sina.com",
   "license": "ISC",
   "devDependencies": {
@@ -28,8 +31,8 @@
     "react-test-renderer": "^15.4.0"
   },
   "dependencies": {
-    "simple-react-ui": "^2.7.0",
     "es6-promise": "4.1.0",
+    "simple-react-ui": "^2.8.0",
     "whatwg-fetch": "^2.0.3"
   },
   "peerDependencies": {}
