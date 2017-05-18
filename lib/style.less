@@ -2,58 +2,45 @@
     border: 3px solid #e4e6e8;
     margin: 0.6em 0;
     background-color: wheat;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
-    /* 评论头部：元信息 */
-    >div:first-child{
-
-        /* 作者信息 */
-        >div:first-child{
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            justify-content: flex-start;
-
-            /* 头像 */
-            >div:first-child{
-                width:80px;
-                img{
-                    height: 80px;
-                    width:100%;
-                }
-            }
-            /* 作者名称、简介 */
-            >div:nth-child(2){
-                margin-left:1em;
-                /* 作者名称 */
-                >span a{
-                    font-size: 1.2em;
-                    font-weight: bolder;
-                }
-
-                /*简介*/
-                >div{
-                }
-            }
-        }
-
-        /* 统计与互动 */
-        >div:nth-child(2){
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content:flex-start;
-            >div{
-                flex:20%;
-            }
+    /* 作者信息 */
+    >div.comment-author{
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: flex-start;
+        /* 头像 */
+        img{
+            height: 80px;
+            width:80px;
         }
     }
 
-    /* 评论主体 */
-    >div:nth-child(2){
-        
+    /* 评论body */
+    >div.comment-body{
+        flex: 1 1 80%;
+        margin-left:8px;
     }
-
-    .comment-reply{
+    /* 统计与互动 */
+    >div:nth-child(3){
+        flex: 0 0 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content:flex-end;
+        >div{
+            flex:20%;
+            text-align:right;
+            &:last-child{
+                padding-right: 4px;
+            }
+        }
+    }
+    >div.comment-reply{
+        flex: 1 0 100%;
         padding-left: 32px;
         background-color: #EFF0F1;
 
@@ -82,6 +69,15 @@
                 margin-left: 2px;
                 margin-right: 4px;
                 border: 1px solid #e4e6e8;
+                >p >span.author:first-child{
+                    a {
+                        color:#0000ff;
+                        font:bold;
+                        &:after{
+                            content:" "
+                        }
+                    }
+                }
             }
             /* 统计与互动 */
             >div:nth-child(3){
