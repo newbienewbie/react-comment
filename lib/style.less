@@ -1,5 +1,5 @@
 .comment-item{
-    border:10px ;
+    border: 3px solid #e4e6e8;
     margin: 0.6em 0;
     background-color: wheat;
 
@@ -53,9 +53,61 @@
         
     }
 
+    .comment-reply{
+        padding-left: 32px;
+        background-color: #EFF0F1;
+
+        .reply-item{
+            display: flex;
+            flex-direction :row-reverse;
+            flex-wrap: wrap;
+            margin-top:16px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+            /* 头像 */
+            >div:first-child{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                width:48px;
+                img{
+                    height: 48px;
+                    width:100%;
+                }
+            }
+            /* 内容 */
+            >div:nth-child(2){
+                flex: 1 0 75%;
+                margin-left: 2px;
+                margin-right: 4px;
+                border: 1px solid #e4e6e8;
+            }
+            /* 统计与互动 */
+            >div:nth-child(3){
+                flex: 0 0 100%;
+                align-self: flex-end;
+                display: flex;
+                flex-direction: row;
+                align-content: space-between;
+                justify-content: flex-end;
+                margin-top:4px;
+                >div{
+                    margin-left: 16px;
+                    margin-right: 16px;
+                }
+                >div:last-child{
+                    margin-right: 8px;
+                }
+            }
+        }
+
+    }
+
 }
 
-.comment-form{
+
+.comment-form,.reply-form{
 
     >div:first-child{
         display: flex;
