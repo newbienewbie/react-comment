@@ -1,6 +1,6 @@
 {
   "name": "react-comment",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "a comment component written in React.js",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "es6-promise": "4.1.0",
+    "moment": "^2.18.1",
     "simple-react-ui": "^2.8.1",
     "whatwg-fetch": "^2.0.3"
   },
