@@ -141,3 +141,15 @@ dist/               # 发布文件夹
 > npm run babel
 > npm run lessc
 ```
+
+## 自带 demo
+
+启动服务器：
+```
+npm run start-demo-server
+```
+
+webpack
+```
+npm run webpack -- --watch
+```
