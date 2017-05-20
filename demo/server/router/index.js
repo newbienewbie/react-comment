@@ -3,7 +3,7 @@ const express=require('express');
 
 
 const router=express.Router();
-router.get("/",express.static(path.join(__dirname,"../../dist")));
+router.use(express.static(path.join(__dirname,"../../dist")));
 
 
 module.exports=router;
