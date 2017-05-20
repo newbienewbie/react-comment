@@ -11,7 +11,19 @@ function install(){
         .then(
             ()=>{ return domain.sequelize.sync({ force: true }); },
             (reason)=>{ return Promise.reject(reason); }
-        );
+        )
+        .then(_=>{
+            return domain.user.create({
+                username:'root',
+                email:'itminus@hotmail.com',
+                password:'blablabla_hash',
+                roles:JSON.stringify([]),
+                state:'active',
+            });
+        })
+        .then(_=>{
+            console.log(`done`);
+        });
 }
 
 /**
