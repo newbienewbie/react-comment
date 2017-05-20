@@ -18,7 +18,6 @@ module.exports={
             {
                 test:/\.jsx?/,
                 loaders:["babel-loader"],//自右向左依次加载
-                include:PATHS.app,
             },
             {
                 test:/\.css$/,
