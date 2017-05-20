@@ -1,6 +1,6 @@
 const session=require('express-session');
 const sessionStore=require('./session-store.js');
-const config=require('../../config/config.js');
+const config=require('../../config');
 
 
 const sess=session({

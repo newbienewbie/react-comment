@@ -1,6 +1,6 @@
 const session=require('express-session');
 const mySqlSession = require('express-mysql-session');
-const config=require('../../config/config.js');
+const config=require('../../config');
 
 
 
