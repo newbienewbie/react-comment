@@ -5,7 +5,7 @@ const commentService=require('../service/comment');
 
 const router=express.Router();
 
-router.post('/list/reply',bodyParser.json(),function(req,res,next){
+router.post('/list/all-reply-list-of-first-page',bodyParser.json(),function(req,res,next){
     let {scope,topicId,page,size,replyPageSize}=req.body;
     topicId=parseInt(topicId);
     page=page?parseInt(page):1;
@@ -20,6 +20,10 @@ router.post('/list/reply',bodyParser.json(),function(req,res,next){
         });
 });
 
+
+/**
+ * 根据指定分页条件，获取相应评论列表或者回复列表
+ */
 router.post('/list',bodyParser.json(),function(req,res,next){
     let {scope,topicId,page,size,replyTo}=req.body;
     topicId=parseInt(topicId);

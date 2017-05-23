@@ -79,7 +79,7 @@ function findById(id){
 
 
 /**
- * 根据主题列举出评论
+ * 根据指定条件，列出相应评论或者回复
  * @param {String} scope 
  * @param {Number} topicId 
  * @param {Number} replyTo 
