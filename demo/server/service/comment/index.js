@@ -79,10 +79,10 @@ function findById(id){
 
 
 /**
- * 根据指定条件，列出相应评论或者回复
+ * 根据指定条件，列出相应评论或者回复，
  * @param {String} scope 
  * @param {Number} topicId 
- * @param {Number} replyTo 
+ * @param {Number} replyTo 如果replyTo=null，代表数据库comment表字段reply_to 值 is NULL
  * @param {Number} page 
  * @param {Number} size 
  * @return {Object} {rows:[],count:null}
@@ -102,9 +102,29 @@ function listByTopicId(scope,topicId,replyTo=null,page=1,size=10){
 }
 
 
-function listByReplyTo(replyTo,page,size){
-
+/**
+ * 根据指定条件，返回指定replyUnder下的次级回复
+ * @param {String} scope 
+ * @param {Number} topicId 
+ * @param {Number} replyUnder 如果replyTo=null，代表数据库comment表字段reply_to 值 is NULL
+ * @param {Number} page 
+ * @param {Number} size 
+ */
+function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10){
+    return domain.comment.findAndCount({
+        where:{scope,topicId,replyUnder},
+        limit:size,
+        offset:(page-1)*size,
+        order:[
+            ['createdAt','desc'],
+        ],
+        include:[
+            {model:domain.user,as:'author'}
+        ],
+    });
 }
+
+
 
 
 /**
@@ -343,6 +363,6 @@ function cancelHate(userId,commentId){
 }
 
 module.exports={
-    create,createCommentOrReply,remove,update,findById,listByTopicId,listAllReplies,
+    create,createCommentOrReply,remove,update,findById,listByTopicId,listByReplyUnder,listAllReplies,
     like,cancelLike,hate,cancelHate,
 };

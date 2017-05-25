@@ -22,10 +22,11 @@ router.post('/list/all-reply-list-of-first-page',bodyParser.json(),function(req,
 
 
 /**
- * 根据指定分页条件，获取相应评论列表或者回复列表
+ * 根据指定分页条件，获取回复于某个replyTo的相应评论列表或者回复列表
+ * 如果未指定replyUnder，则
  */
 router.post('/list',bodyParser.json(),function(req,res,next){
-    let {scope,topicId,page,size,replyTo}=req.body;
+    let {scope,topicId,page,size,replyTo,replyUnder}=req.body;
     topicId=parseInt(topicId);
     page=page?parseInt(page):1;
     page=page>0?page:1;
@@ -34,11 +35,21 @@ router.post('/list',bodyParser.json(),function(req,res,next){
     if(!replyTo){
         replyTo=null;
     }
-    commentService.listByTopicId(scope,topicId,replyTo,page,size)
-        .then(result=>{
+    let p=null;
+    // 如果指定了 replyUnder 且 不为 null，则意味着是要获取某个顶级评论下的所有回复
+    if(!!replyUnder){
+        p=commentService.listByReplyUnder(scope,topicId,replyUnder,page,size);
+    }
+    else{
+        p=commentService.listByTopicId(scope,topicId,replyTo,page,size)
+    }
+
+    return p.then(result=>{
             res.end(JSON.stringify(result));
         });
 });
+
+
 
 router.post('/new',bodyParser.json(),function(req,res,next){
     const {scope,topicId,replyTo,content}=req.body;
