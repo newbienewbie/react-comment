@@ -9,8 +9,8 @@ function mapStateToProps(state){
         commentsCount:state.comment.commentsCount,
         commentPageSize:state.comment.commentPageSize, 
         currentCommentPage:state.comment.currentCommentPage,
-        replies:state.replies,
-        replyPageSize:state.replyPageSize,
+        replies:state.reply.replies,
+        replyPageSize:state.reply.replyPageSize,
     };
 }
 
