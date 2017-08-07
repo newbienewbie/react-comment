@@ -1,17 +1,13 @@
 .comment-item{
     border: 3px solid #e4e6e8;
     margin: 0.6em 0;
-    background-color: wheat;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
 
     /* 作者信息 */
     >div.comment-author{
-        display: flex;
-        flex-direction: row;
-        align-items: stretch;
-        justify-content: flex-start;
+        display: block;
+        float: left;
+        width: 7%;
+        margin: 3px 15px 0 0;
         /* 头像 */
         img{
             height: 80px;
@@ -21,12 +17,11 @@
 
     /* 评论body */
     >div.comment-body{
-        flex: 1 1 80%;
         margin-left:8px;
     }
     /* 统计与互动 */
     >div:nth-child(3){
-        flex: 0 0 100%;
+        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -41,7 +36,7 @@
     }
     >div.comment-reply{
         flex: 1 0 100%;
-        padding-left: 32px;
+        padding-left: 6em;
         background-color: #EFF0F1;
 
         .reply-item{
@@ -50,6 +45,7 @@
             flex-wrap: wrap;
             margin-top:16px;
             margin-bottom: 16px;
+            margin-right: 16px;
             align-items: flex-start;
             /* 头像 */
             >div:first-child{
@@ -99,10 +95,28 @@
         }
 
     }
+    
+    
 
 }
 
-
+nav{
+    display: block;
+    ul.pagination{
+        display: inline-block;
+        padding-left: 0;
+        >li{
+            background: indianred;
+            display: inline;
+            width:1.5em;
+            >a{
+                position: relative;
+                float:left;
+                padding:0.3em;
+            }
+        }
+    }
+}
 .comment-form,.reply-form{
 
     >div:first-child{
