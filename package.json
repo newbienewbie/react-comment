@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "babel": "babel lib --out-dir dist",
-    "lessc": "lessc lib/style.less dist/style.css",
+    "lessc": "lessc lib/components/style.less dist/style.css",
     "build": "npm run babel && npm run lessc",
+    "prepublish": "npm run build",
     "webpack": "webpack",
     "start-demo-server": "node demo/server/index.js",
     "test": "jest"

@@ -116,7 +116,7 @@ export default Detail;
 ### 基本原理
 
 * 使用`babel`编译`lib/`文件夹下的所有`JavaScript`文件到`dist/`文件夹下
-* 使用`less`预处理`lib/style.less`，渲染后存为`dist/style.css`
+* 使用`less`预处理`lib/components/style.less`，渲染后存为`dist/style.css`
 
 ### 目录介绍
 
