@@ -1,5 +1,5 @@
 import React from 'react';
-import {CommentContainer} from './comment';
+import {CommentContainer} from '../../lib/container/comment';
 
 
 export class App extends React.Component{

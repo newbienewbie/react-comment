@@ -1,6 +1,6 @@
 {
   "name": "react-comment",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "a comment component written in React.js",
   "main": "index.js",
   "scripts": {
