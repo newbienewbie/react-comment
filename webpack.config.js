@@ -2,7 +2,7 @@ const path=require("path");
 
 const PATHS={
     app:path.join(__dirname,"demo","src"),
-    build:path.join(__dirname,"demo","dist"),
+    build:path.join(__dirname,"precompile"),
 };
 
 module.exports={

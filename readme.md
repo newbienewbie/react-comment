@@ -21,7 +21,7 @@ npm install react-coment
 <!-- 占位，评论的容器 -->
 <div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
 
-<!-- 引入 react-comment/demo/dist/comment.js 脚本 -->
+<!-- 引入 react-comment/precompile/comment.js 脚本 -->
 <script src="/js/comment.js"></script>
 ```
 
