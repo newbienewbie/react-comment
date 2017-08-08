@@ -11,7 +11,23 @@
 npm install react-coment
 ```
 
-### 样式处理
+### 傻瓜式使用:
+
+其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
+
+这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)：
+
+```HTML
+<!-- 占位，评论的容器 -->
+<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
+
+<!-- 引入 react-comment/demo/dist/comment.js 脚本 -->
+<script src="/js/comment.js"></script>
+```
+
+如果不是通过上述“傻瓜式”方式使用，需要进行手工配置、编译。
+
+### 高级使用——样式处理
 
 出于通用性考虑，目前入口文件`index.js`没有载入`css`，如果想要使用预定义的样式，需要手工载入。
 * 如果使用`webpack`打包`css`，只需要`require('react-comment/dist/style.css')`
@@ -119,7 +135,6 @@ ReactDOM.render(
 ```
 编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
 
-其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)。
 
 ## 开发
 
