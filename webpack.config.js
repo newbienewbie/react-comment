@@ -2,12 +2,12 @@ const path=require("path");
 
 const PATHS={
     app:path.join(__dirname,"demo","src"),
-    build:path.join(__dirname,"demo","dist","js"),
+    build:path.join(__dirname,"demo","dist"),
 };
 
 module.exports={
     entry:{
-        main:path.join(PATHS.app,"index.js"),
+        comment:path.join(PATHS.app,"index.js"),
     },
     output:{
         path:PATHS.build,

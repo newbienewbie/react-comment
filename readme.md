@@ -119,8 +119,7 @@ ReactDOM.render(
 ```
 编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
 
-其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。这样，就只要引入提前编译的`comment.js`即可。
-
+其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)。
 
 ## 开发
 
