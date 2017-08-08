@@ -5,7 +5,7 @@ const commentService=require('../service/comment');
 
 const router=express.Router();
 
-router.post('/list/all-reply-list-of-first-page',bodyParser.json(),function(req,res,next){
+router.post('/list/reply-list-of-page',bodyParser.json(),function(req,res,next){
     let {scope,topicId,page,size,replyPageSize}=req.body;
     topicId=parseInt(topicId);
     page=page?parseInt(page):1;
