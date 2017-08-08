@@ -1,6 +1,6 @@
 # react-comment
 
-前端评论组件，支持分页。
+前端评论组件，支持分页。带后端 demo server 。
 
 
 ## 安装与使用
@@ -21,14 +21,16 @@ npm install react-coment
 
 ### 使用
 
-#### 基本属性
+#### Comment 基本属性
 
-* topicId ：评论对应的主题ID
-* scope : 评论所述的域，可以用来分类
+`Comment`组件有个两个基本属性：
+
+* `topicId` ：评论对应的主题ID
+* `scope` : 评论所述的域，可以用来分类，比如文章、视频、书籍等
 
 #### 交互属性：
 
-由于`react-comment`只是个前端，需要向后端请求数据，所以以下行为属性需要动态注入：
+由于`react-comment`只是个前端，需要向后端请求数据，为了保持通用性，所有在`lib/api/index.js`中规定了与后端通信接口。如果需要定制，其中相关方法需要需要动态注入，比如：
 
 * 获取评论列表: `fetchCommentList(scope,topicId,page=1,size=8)=>Promise<{comments,count}>`
 * 创建新评论: `create(scope,topicId,content)=>Promise<any>`
@@ -89,26 +91,35 @@ POST "/comment/downvote"
 })
 ```
 
-#### demo
-```JavaScript
-import React from 'react';
-import {Comment} from 'react-comment';
-import {Ebook} from './ebook';
+#### 使用 demo demo
 
-
-export const Detail=React.createClass({
-
-    render:function () {
-        return (<div>
-            <Ebook id={this.props.params.id}/>
-            <Comment topicId={this.props.params.id} scope="ebook"/>
-        </div>);
-    }
-});
-
-export default Detail;
+一个使用场景：在一个CMS系统中，其余部分都是服务端渲染，可以在服务端模板中加入以下HTML代码：
+```HTML
+<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
 ```
 
+然后编写以下入口文件：
+```JavaScript
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {Provider} from 'react-redux';
+import {Comment,store} from 'react-comment';
+
+
+const scope="ebook";  // document.getElementById('react-comment-container').getAttribute("data-scope")
+const topicId=1;      // document.getElementById('react-comment-container').getAttribute("data-topicId")
+
+ReactDOM.render(
+    (<Provider store={store}>
+        <Comment scope={scope} topicId={topicId} />
+    </Provider>),
+    document.getElementById("comment-container")
+);
+```
+编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
+
+其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。这样，就只要引入提前编译的`comment.js`即可。
 
 
 ## 开发
