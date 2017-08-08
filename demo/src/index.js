@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {App} from './app';
-import {store} from '../../index';
+import {Comment,store} from '../../index';
 import '../../dist/style.css';
+
+
+const scope= document.getElementById('react-comment-container').getAttribute("data-scope");
+const topicId=document.getElementById('react-comment-container').getAttribute("data-topicId");
+
 
 ReactDOM.render(
     <Provider store={store}>
-        <App></App>
+        <Comment scope={scope} topicId={topicId} />
     </Provider>,
-    document.getElementById("app")
+    document.getElementById("react-comment-container")
 );
