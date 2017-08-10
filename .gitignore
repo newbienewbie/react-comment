@@ -3,3 +3,4 @@ npm-debug.log
 dist/
 demo/dist/js
 demo/server/config/config.dev.js
+precompile/
