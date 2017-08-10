@@ -79,10 +79,10 @@ function findById(id){
 
 
 /**
- * 根据指定条件，列出相应评论或者回复，
+ * 根据主题列举出评论
  * @param {String} scope 
  * @param {Number} topicId 
- * @param {Number} replyTo 如果replyTo=null，代表数据库comment表字段reply_to 值 is NULL
+ * @param {Number} replyTo 
  * @param {Number} page 
  * @param {Number} size 
  * @return {Object} {rows:[],count:null}
@@ -93,14 +93,13 @@ function listByTopicId(scope,topicId,replyTo=null,page=1,size=10){
         limit:size,
         offset:(page-1)*size,
         order:[
-            ['createdAt','desc'],
+            ['createdAt','asc'],
         ],
         include:[
             {model:domain.user,as:'author'}
         ],
     });
 }
-
 
 /**
  * 根据指定条件，返回指定replyUnder下的次级回复
@@ -116,7 +115,7 @@ function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10){
         limit:size,
         offset:(page-1)*size,
         order:[
-            ['createdAt','desc'],
+            ['createdAt','asc'],
         ],
         include:[
             {model:domain.user,as:'author'}
@@ -125,6 +124,11 @@ function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10){
 }
 
 
+
+
+function listByReplyTo(replyTo,page,size){
+
+}
 
 
 /**
@@ -152,14 +156,14 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
                                 and comment.reply_under is null
                                 and scope=:scope
                                 and topic_id=:topicId
-                            order by createdAt desc
+                            order by createdAt asc
                             limit :offset , :commentSize
                         )as c  -- 特定scope及topicId下的顶级评论
                     inner join comment as r 
                     on r.reply_under = c.id
                 ) as x , -- 特定scope及topicId的所有顶级评论下的全部回复
                 (select @rank:=0,@partition:=null)as _temp_var
-            order by reply_under)
+            order by reply_under,createdAt)
             as t
             where row_number <= :replySize `,
             {
@@ -183,7 +187,7 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
                     and comment.reply_under is null
                     and scope=:scope
                     and topic_id=:topicId
-                order by createdAt desc
+                order by createdAt asc
                 limit :offset , :commentSize
             )as c  -- 特定scope及topicId下的顶级评论
         inner join comment as r 
