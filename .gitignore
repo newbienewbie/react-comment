@@ -5,3 +5,4 @@ demo/dist/js
 demo/server/config/config.dev.js
 precompile/
 __test__/__snapshots__/
+__snapshots__/
