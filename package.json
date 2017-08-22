@@ -1,6 +1,6 @@
 {
   "name": "react-comment",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "a comment component written in React.js",
   "main": "index.js",
   "scripts": {
@@ -50,6 +50,7 @@
     "babel-loader": "^7.0.0",
     "es6-promise": "4.1.0",
     "moment": "^2.18.1",
+    "normalizr": "^3.2.3",
     "react-redux": "^5.0.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
