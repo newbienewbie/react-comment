@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-import {CommentList} from '../lib/comment-list';
+import {Provider} from 'react-redux';
+import {Comment} from '../../lib/container/comment';
+import {store} from '../../lib/store';
 
 
-describe("test《comment-list.js》",function(){
+const scope="post"; 
+const topicId="1";
+
+
+describe("test《comment.js》",function(){
 
     const f=(i)=>{return {
         id:`888${i}`,
@@ -21,9 +27,12 @@ describe("test《comment-list.js》",function(){
     const s=[0,1,2,3,4,5].map(i=>f(i)); 
 
     it("compare snapshot",()=>{
-        const component=renderer.create(<CommentList 
-            comments={s}
-        />);
+        // const component=renderer.create(<Comment 
+        //     comments={s}
+        // />);
+        const component=renderer.create(<Provider store={store}>
+            <Comment scope={scope} topicId={topicId} comments={s}/>
+        </Provider>);
     
         let tree=component.toJSON();
         expect(tree).toMatchSnapshot();

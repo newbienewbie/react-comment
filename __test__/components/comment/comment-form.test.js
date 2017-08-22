@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
 import ReactTestUtils from 'react-dom/test-utils';
-import {CommentForm} from '../lib/comment-form';
+import {CommentForm} from '../../../lib/components/comment/comment-form';
 
 
 describe("test《comment-form.js》",function(){
