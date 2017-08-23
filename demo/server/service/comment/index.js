@@ -143,29 +143,36 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
 
     // 筛选出指定分页条件下的所有顶级评论的某分页下的次级回复
     const rows= domain.sequelize.query(
-        `select t.*,row_number from
+        `
+        select t.*,row_number, 
+            u.username as author_username, 
+            u.email as author_email, 
+            u.roles as author_roles, 
+            u.state as author_state 
+        from
             (select 
-                x.id as id,x.content,x.upvotes,x.downvotes,x.author_id as authorId,x.scope as scope,x.topic_id as topicId,x.reply_to as replyTo,x.reply_under as replyUnder,x.createdAt as createdAt,x.updatedAt as updatedAt
+                x.id as id,x.content,x.upvotes,x.downvotes,x.author_id as author_id,x.scope as scope,x.topic_id as topicId,x.reply_to as replyTo,x.reply_under as replyUnder,x.createdAt as createdAt,x.updatedAt as updatedAt
                 ,IF(@partition=x.reply_under,@rank:=@rank+1,@rank:=1) as row_number
                 ,@partition:=x.reply_under as under
-            from 
-                (select r.*
-                    from 
-                        (select * from comment
-                            where comment.reply_to is null
-                                and comment.reply_under is null
-                                and scope=:scope
-                                and topic_id=:topicId
-                            order by createdAt asc
-                            limit :offset , :commentSize
-                        )as c  -- 特定scope及topicId下的顶级评论
-                    inner join comment as r 
-                    on r.reply_under = c.id
-                ) as x , -- 特定scope及topicId的所有顶级评论下的全部回复
-                (select @rank:=0,@partition:=null)as _temp_var
-            order by reply_under,createdAt)
-            as t
-            where row_number <= :replySize `,
+                from 
+                    (select r.*
+                        from 
+                            (select * from comment
+                                where comment.reply_to is null
+                                    and comment.reply_under is null
+                                    and scope=:scope
+                                    and topic_id=:topicId
+                                order by createdAt asc
+                                limit :offset , :commentSize
+                            )as c  -- 特定scope及topicId下的顶级评论
+                        inner join comment as r 
+                        on r.reply_under = c.id
+                    ) as x , -- 特定scope及topicId的所有顶级评论下的全部回复
+                    (select @rank:=0,@partition:=null)as _temp_var
+                    order by reply_under,createdAt
+            ) as t
+            inner join user as u on u.id=t.author_id
+        `,
             {
                 replacements:{
                     scope,
@@ -211,9 +218,27 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
            const counts=results[1];
            // 由 replies 组成的map
            const repliesList={};
+
+           const field_pattern=/author_(.*)$/;
            counts.forEach(e=>{
                const id=e.replyUnder;
-               const replies=rows.filter(r=>r.replyUnder==id);
+
+               // 晒出回复于某个顶级评论下的所有回复
+               let replies=rows.filter(r=>r.replyUnder==id);
+               // 把 `author_*` 这种形式的字段转换为 `reply.author.*`
+               replies.forEach(r => {
+                   const author = {};
+                   Object.keys(r).forEach(field_name => {
+                       const result = field_pattern.exec(field_name);
+                       if (result) {
+                           const author_field_name = result[1];
+                           author[author_field_name] = r[field_name];
+                           delete r[field_name];
+                       }
+                   });
+                   r.author = author;
+               });
+
                const count=e.count;
                repliesList[id]={ 
                    rows:replies, 
