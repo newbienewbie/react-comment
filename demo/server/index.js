@@ -11,7 +11,7 @@ app.use(sess);
 
 
 app.use("/comment",require('./router/comment'));
-app.use("/login",require('./router/login'));
+app.use("/account",require('./router/login'));
 app.use("/",require('./router/index'));
 
 const PORT=4000;

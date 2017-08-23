@@ -1,10 +1,11 @@
 const express=require('express');
 const domain=require('../domain');
+const userService=require('../service/account/user-service');
 
 const router=express.Router();
 
 // fake login
-router.get('/fake',function(req,res){
+router.get('/login/fake',function(req,res){
     return domain.user.find({
             where: { username: 'root'}
         }).then( user=>{
@@ -25,5 +26,23 @@ router.get('/fake',function(req,res){
             _=>res.end(JSON.stringify(_))
         );
 });
+
+
+/**
+ * 当前用户的profile
+ */
+router.use('/profile/me',function(req,res,next){
+    const authorId=req.session.userid;
+    userService.findById(authorId)
+        .then(user=>{
+            user=JSON.parse(JSON.stringify(user));
+            delete user.password;
+            res.end(JSON.stringify(user));
+        })
+        .catch(e=>{
+            console.log(`以id: ${id} 读取用户错误`,e);
+        })
+});
+
 
 module.exports=router;
