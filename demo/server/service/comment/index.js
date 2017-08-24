@@ -172,6 +172,7 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
                     order by reply_under,createdAt
             ) as t
             inner join user as u on u.id=t.author_id
+            where row_number <= :replySize
         `,
             {
                 replacements:{
