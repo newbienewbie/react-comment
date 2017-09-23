@@ -13,7 +13,7 @@ npm install react-coment
 
 ### 傻瓜式使用:
 
-其实，如果根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、`data-scope`属性固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
+根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、和`data-scope`属性均固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
 
 这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)：
 
@@ -27,7 +27,37 @@ npm install react-coment
 
 如果不是通过上述“傻瓜式”方式使用，需要进行手工配置、编译。
 
-### 高级使用——样式处理
+### 高级使用
+
+一个高级点的使用方式是自己控制评论组件的渲染，就像一个真正的`React`组件那样。
+
+
+一个使用场景：在一个CMS系统中，其余部分都是服务端渲染，评论部分是客户端渲染，可以在服务端模板中加入以下HTML代码：
+```HTML
+<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
+```
+
+然后编写以下入口文件：
+```JavaScript
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {Provider} from 'react-redux';
+import {Comment,store} from 'react-comment';
+
+import 'path/to/dist/style.css';    // 这里可以导入你的自定义CSS 
+
+const scope="ebook";  // 根据某种方式所获得的评论的scope 
+const topicId=1;      // 根据某种方式所获取的评论的主题id
+
+ReactDOM.render(
+    (<Provider store={store}>
+        <Comment scope={scope} topicId={topicId} />
+    </Provider>),
+    document.getElementById("comment-container")
+);
+```
+编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
 
 出于通用性考虑，目前入口文件`index.js`没有载入`css`，如果想要使用预定义的样式，需要手工载入。
 * 如果使用`webpack`打包`css`，只需要`require('react-comment/dist/style.css')`
@@ -35,23 +65,57 @@ npm install react-coment
 
 当然，你完全可以使用自己的样式。
 
-### 使用
+## API
 
-#### Comment 基本属性
+### 对外接口
+
+出于要适应更多的使用场景的目的，本 `package` 对外暴露`comment`组件、`store`、`reducer`几个属性：
+* `Comment`：评论组件
+* `store`：针对评论组件预定义的`redux store`
+* `reducer`: 相关的`redux reducer`，可以配合其他组件使用,
+
+对于一种`CMS`，可能页面的文章部分或者其他部分是由服务端渲染，而评论部分可以用`react-comment`。在这种情况下，可以默认提供的`store`，如同上例那样。
+
+而如果是要在单页面场景中使用，则很可能需要把`react-comment`融入自己的一个大`store`中，从而跟其他组件互动。这时候可以利用`package`暴露出来的`reducer`来创建`store`：
+
+```javascript
+import thunkMw from 'redux-thunk';
+import {createStore,applyMiddleware,compose} from 'redux';
+import {reducer} from 'react-comment';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const store = createStore(
+    reducer, 
+    {
+        user:{
+            list:[],
+            currentLoginUser:ANONYMOUS_USER,
+        }
+    },
+    composeEnhancers(
+        applyMiddleware( thunkMw, ) 
+    )
+);
+```
+
+### Comment 基本属性
 
 `Comment`组件有个两个基本属性：
 
 * `topicId` ：评论对应的主题ID
 * `scope` : 评论所述的域，可以用来分类，比如文章、视频、书籍等
 
-#### 交互属性：
+实际上，`Comment`组件是个容器组件，它会把将来传递给它的`store`的状态里的评论、回复、用户及相关配置等信息丢给内部一个真正的`Comment`视图组件，从而渲染出评论效果。
 
-由于`react-comment`只是个前端，需要向后端请求数据，为了保持通用性，所有在`lib/api/index.js`中规定了与后端通信接口。如果需要定制，其中相关方法需要需要动态注入，比如：
+### 与后端交互的API
+
+由于`react-comment`本身只是个前端，需要向后端交互，为了保持通用性，在`lib/api/index.js`中规定了与后端通信接口。
 
 * 获取评论列表: `fetchCommentList(scope,topicId,page=1,size=8)=>Promise<{comments,count}>`
 * 创建新评论: `create(scope,topicId,content)=>Promise<any>`
 * 投票支持某条评论: `onUpvote(commentId)=>Promise<Comment>或 Promise<false>`
 * 投票反对某条评论 `onDownvote(commentId)=>Promise<Comment>或Promise<false>`:
+* ...
 
 默认情况下，
 
@@ -107,34 +171,7 @@ POST "/comment/downvote"
 })
 ```
 
-#### 使用 demo demo
-
-一个使用场景：在一个CMS系统中，其余部分都是服务端渲染，可以在服务端模板中加入以下HTML代码：
-```HTML
-<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
-```
-
-然后编写以下入口文件：
-```JavaScript
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import {Provider} from 'react-redux';
-import {Comment,store} from 'react-comment';
-
-
-const scope="ebook";  // document.getElementById('react-comment-container').getAttribute("data-scope")
-const topicId=1;      // document.getElementById('react-comment-container').getAttribute("data-topicId")
-
-ReactDOM.render(
-    (<Provider store={store}>
-        <Comment scope={scope} topicId={topicId} />
-    </Provider>),
-    document.getElementById("comment-container")
-);
-```
-编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
-
+更多的与后端交互的`API`请参考`lib/api/index.js`文件。
 
 ## 开发
 
