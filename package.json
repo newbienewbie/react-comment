@@ -6,7 +6,7 @@
   "scripts": {
     "babel": "babel lib --out-dir dist",
     "lessc": "lessc lib/components/style.less dist/style.css",
-    "build": "npm run babel && npm run lessc",
+    "build": "npm run babel && npm run lessc && npm run webpack -- -p ",
     "prepublish": "npm run build",
     "webpack": "webpack",
     "start-demo-server": "node demo/server/index.js",
