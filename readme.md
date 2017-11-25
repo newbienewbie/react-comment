@@ -13,7 +13,13 @@ npm install react-coment
 
 ### 傻瓜式使用:
 
-根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、和`data-scope`属性等配置项均固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
+根据“约定大于配置”原则，要求作为`placeholder`的`div`容器遵循如下约定：
+1. `id`属性值固定，这样可以锁定容器元素。
+2. `data-scope`属性名固定
+3. `data-topicId`属性名固定
+4. `data-loginUrl`属性名固定
+
+则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
 
 这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)：
 
@@ -37,9 +43,9 @@ npm install react-coment
 一个使用场景：在一个CMS系统中，其余部分都是服务端渲染，评论部分是客户端渲染，可以在服务端模板中加入以下HTML代码：
 ```HTML
 <div id="react-comment-container" 
-    data-topicId="UniquetopicId" 
     data-scope="movie" 
-    data-login-url="/sth/like/account/login"
+    data-topicId="UniquetopicId" 
+    data-loginUrl="/sth/like/account/login"
 ></div> 
 ```
 
@@ -84,12 +90,12 @@ ReactDOM.render(
 
 出于要适应更多的使用场景的目的，本 `package` 对外暴露`comment`组件、`store`、`reducer`几个属性：
 * `Comment`：评论组件
-* `store`：针对评论组件预定义的`redux store`
 * `reducer`: 相关的`redux reducer`，可以配合其他组件使用,
+* `store`：就是一个非常简单的、针对评论组件预定义的、普通的`redux store`，大可以自定义之。
 
 对于一种`CMS`，可能页面的文章部分或者其他部分是由服务端渲染，而评论部分可以用`react-comment`。在这种情况下，可以默认提供的`store`，如同上例那样。
 
-而如果是要在单页面场景中使用，则很可能需要把`react-comment`融入自己的一个大`store`中，从而跟其他组件互动。这时候可以利用`package`暴露出来的`reducer`来创建`store`：
+而如果是要在单页面场景中使用，则很可能需要把`react-comment`融入自己的一个大`store`中，从而跟其他组件互动。这时候可以利用`package`暴露出来的`reducer`来创建`store`。默认的`store`定义为：
 
 ```javascript
 import thunkMw from 'redux-thunk';
@@ -103,6 +109,7 @@ export const store = createStore(
         user:{
             list:[],
             currentLoginUser:ANONYMOUS_USER,
+            hasSignedIn:false,
         }
     },
     composeEnhancers(
@@ -113,10 +120,10 @@ export const store = createStore(
 
 ### Comment 基本属性
 
-`Comment`组件有个两个基本属性：
+`Comment`组件有以下基本属性：
 
-* `topicId` ：评论对应的主题ID
 * `scope` : 评论所述的域，可以用来分类，比如文章、视频、书籍等
+* `topicId` ：评论对应的主题ID
 
 实际上，`Comment`组件是个容器组件，它会把将来传递给它的`store`的状态里的评论、回复、用户及相关配置等信息丢给内部一个真正的`Comment`视图组件，从而渲染出评论效果。
 
