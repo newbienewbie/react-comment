@@ -5,15 +5,17 @@ import {Comment,LoginMaskLayer,store} from '../../index';
 import '../../dist/style.css';
 
 
-const scope= document.getElementById('react-comment-container').getAttribute("data-scope");
-const topicId=document.getElementById('react-comment-container').getAttribute("data-topicId");
+const el=document.getElementById('react-comment-container');
+const scope= el.getAttribute("data-scope");
+const topicId=el.getAttribute("data-topicId");
+const loginUrl=el.getAttribute("data-login-url");
 
 // window.isLogin=false;
 
 ReactDOM.render(
     (<Provider store={store}>
         <div style={{ position:'relative' }}>
-            <LoginMaskLayer/>
+            <LoginMaskLayer loginUrl={loginUrl} />
             <Comment scope={scope} topicId={topicId} />
         </div>
     </Provider>),
