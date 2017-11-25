@@ -6,7 +6,10 @@ const router=express.Router();
 
 // fake login
 router.get('/login/fake',function(req,res){
-    const {redirectUrl}=req.query;
+    let {redirectUrl}=req.query;
+    if(!redirectUrl){
+        redirectUrl='/';
+    }
     return domain.user.find({
             where: { username: 'root'}
         }).then( user=>{
