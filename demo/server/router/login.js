@@ -32,8 +32,12 @@ router.get('/login/fake',function(req,res){
  * 当前用户的profile
  */
 router.use('/profile/me',function(req,res,next){
-    const authorId=req.session.userid;
-    userService.findById(authorId)
+    const userId=req.session.userid;
+    if(!userId){
+        res.end(JSON.stringify({status:"FAIL",message:'wrong userId id'}));
+        return;
+    }
+    userService.findById(userId)
         .then(user=>{
             user=JSON.parse(JSON.stringify(user));
             delete user.password;
