@@ -13,17 +13,19 @@ npm install react-coment
 
 ### 傻瓜式使用:
 
-根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、和`data-scope`属性均固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
+根据“约定大于配置”原则，要求作为`placeholder`的`div`容器的`id`属性、`data-topicId`属性、和`data-scope`属性等配置项均固定，则入口文件也是固定的，从而编译出的`comment.js`也是固定的。
 
 这样，就只要引入提前编译的`comment.js`即可(即是通过`script`标签引入`demo/dist/comment.js`)：
 
 ```HTML
 <!-- 占位，评论的容器 -->
-<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
+<div id="react-comment-container" data-topicId="" data-scope="movie" data-login-url="/account/login"></div> 
 
 <!-- 引入 react-comment/precompile/comment.js 脚本 -->
 <script src="/js/comment.js"></script>
 ```
+
+![screenshot](https://raw.githubusercontent.com/newbienewbie/react-comment/master/demo/demo.png)
 
 如果不是通过上述“傻瓜式”方式使用，需要进行手工配置、编译。
 
@@ -50,11 +52,16 @@ import 'path/to/dist/style.css';    // 这里可以导入你的自定义CSS
 const scope="ebook";  // 根据某种方式所获得的评论的scope 
 const topicId=1;      // 根据某种方式所获取的评论的主题id
 
+const loginUrl='/account/login';  // 登录页面，会自动附加`?redirectUrl=${document.location}`参数
+
 ReactDOM.render(
     (<Provider store={store}>
-        <Comment scope={scope} topicId={topicId} />
+        <div style={{ position:'relative' }}>
+            <LoginMaskLayer loginUrl={loginUrl} />
+            <Comment scope={scope} topicId={topicId} />
+        </div>
     </Provider>),
-    document.getElementById("comment-container")
+    document.getElementById("react-comment-container")
 );
 ```
 编译、打包之，得到`comment.js`文件，以`script`的形式引入`HTML`中即可。
