@@ -11,11 +11,11 @@ const topicId=document.getElementById('react-comment-container').getAttribute("d
 // window.isLogin=false;
 
 ReactDOM.render(
-    (<div style={{position:'relative'}}>
-        <LoginMaskLayer isLogin={!!window.isLogin} />
-        <Provider store={store}>
+    (<Provider store={store}>
+        <div style={{ position:'relative' }}>
+            <LoginMaskLayer/>
             <Comment scope={scope} topicId={topicId} />
-        </Provider>
-    </div>),
+        </div>
+    </Provider>),
     document.getElementById("react-comment-container")
 );
