@@ -8,7 +8,7 @@ import '../../dist/style.css';
 const el=document.getElementById('react-comment-container');
 const scope= el.getAttribute("data-scope");
 const topicId=el.getAttribute("data-topicId");
-const loginUrl=el.getAttribute("data-login-url");
+const loginUrl=el.getAttribute("data-loginUrl");
 
 // window.isLogin=false;
 
