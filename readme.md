@@ -36,7 +36,11 @@ npm install react-coment
 
 一个使用场景：在一个CMS系统中，其余部分都是服务端渲染，评论部分是客户端渲染，可以在服务端模板中加入以下HTML代码：
 ```HTML
-<div id="react-comment-container" data-topicId="" data-scope="movie"></div> 
+<div id="react-comment-container" 
+    data-topicId="UniquetopicId" 
+    data-scope="movie" 
+    data-login-url="/sth/like/account/login"
+></div> 
 ```
 
 然后编写以下入口文件：
@@ -45,7 +49,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {Provider} from 'react-redux';
-import {Comment,store} from 'react-comment';
+import {Comment} from 'react-comment';
+// 你可以导入默认提供的store，也可以根据暴露的reducer创建自己的store
+import {store} from 'react-comment';
 
 import 'path/to/dist/style.css';    // 这里可以导入你的自定义CSS 
 
@@ -213,7 +219,7 @@ dist/               # 发布文件夹
 
 ## 自带 demo
 
-启动服务器：
+添加配置`demo/server/config/config.dev.js`后，启动服务器：
 ```
 npm run start-demo-server
 ```
