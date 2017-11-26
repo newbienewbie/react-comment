@@ -10,10 +10,10 @@ router.get('/login/fake',function(req,res){
     if(!redirectUrl){
         redirectUrl='/';
     }
-    return domain.user.find({
-            where: { username: 'root'}
-        }).then( user=>{
-            if (user) {
+    return domain.user.findAll().then( users=>{
+            if (users) {
+                const index=users.length*Math.random();
+                const user=users[Math.floor(index)]
                 req.session.userid=user.id;
                 req.session.username = user.username;
                 req.session.roles = JSON.parse(user.roles) || [];
@@ -22,7 +22,7 @@ router.get('/login/fake',function(req,res){
                     roles:user.roles,
                 };
             } else {
-                return Promise.reject(`the user with ${username} not found`);
+                return Promise.reject(`user not found`);
             }
         })
         .then(
