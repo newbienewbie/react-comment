@@ -13,13 +13,36 @@ function install(){
             (reason)=>{ return Promise.reject(reason); }
         )
         .then(_=>{
-            return domain.user.create({
-                username:'root',
-                email:'itminus@hotmail.com',
-                password:'blablabla_hash',
-                roles:JSON.stringify([]),
-                state:'active',
-            });
+            return Promise.all([
+                domain.user.create({
+                    username:'root',
+                    email:'itminus@hotmail.com',
+                    password:'blablabla_hash',
+                    roles:JSON.stringify([]),
+                    state:'active',
+                }),
+                domain.user.create({
+                    username:'user1',
+                    email:'user1@hotmail.com',
+                    password:'blablabla_hash',
+                    roles:JSON.stringify([]),
+                    state:'active',
+                }),
+                domain.user.create({
+                    username:'user2',
+                    email:'user2@hotmail.com',
+                    password:'blablabla_hash',
+                    roles:JSON.stringify([]),
+                    state:'active',
+                }),
+                domain.user.create({
+                    username:'user3',
+                    email:'user3@hotmail.com',
+                    password:'blablabla_hash',
+                    roles:JSON.stringify([]),
+                    state:'active',
+                }),
+            ]);;
         })
         .then(_=>{
             console.log(`done`);
