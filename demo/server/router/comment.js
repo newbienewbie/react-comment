@@ -14,7 +14,8 @@ router.post('/list/reply-list-of-page',bodyParser.json(),function(req,res,next){
     size=size>0?size:10;
     replyPageSize=parseInt(replyPageSize);
     replyPageSize=replyPageSize>0?replyPageSize:10;
-    return commentService.listAllReplies(scope,topicId,page,size,replyPageSize)
+    const currentUserId=req.session.userid;
+    return commentService.listAllReplies(scope,topicId,page,size,replyPageSize,currentUserId)
         .then(list=>{
             res.end(JSON.stringify(list));
         });

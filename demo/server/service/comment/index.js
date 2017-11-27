@@ -138,52 +138,66 @@ function listByReplyTo(replyTo,page,size){
  * @param {Number} page 
  * @param {Number} size 
  * @param {Number} replySize 
+ * @param {Number} currentUserId 当前用户ID，如果提供，则顺带查出该用户对相关回复的意见
  */
-function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
+function listAllReplies(scope,topicId,page=1,size=10,replySize=10,currentUserId=null){
+
+    const rowsSQL=`
+    select t.* 
+        ,row_number 
+        ,u.username as author_username 
+        ,u.email as author_email 
+        ,u.roles as author_roles 
+        ,u.state as author_state
+        ${ !! currentUserId ?
+            " ,o.opinion ":
+            " "
+        }
+    from
+        (select 
+            x.id as id,x.content,x.upvotes,x.downvotes,x.author_id as author_id,x.scope as scope,x.topic_id as topicId,x.reply_to as replyTo,x.reply_under as replyUnder,x.createdAt as createdAt,x.updatedAt as updatedAt
+            ,IF(@partition=x.reply_under,@rank:=@rank+1,@rank:=1) as row_number
+            ,@partition:=x.reply_under as under
+            from 
+                (select r.*
+                    from 
+                        (select * from comment
+                            where comment.reply_to is null
+                                and comment.reply_under is null
+                                and scope=:scope
+                                and topic_id=:topicId
+                            order by createdAt asc
+                            limit :offset , :commentSize
+                        )as c  -- 特定scope及topicId下的顶级评论
+                    inner join comment as r 
+                    on r.reply_under = c.id
+                ) as x , -- 特定scope及topicId的所有顶级评论下的全部回复
+                (select @rank:=0,@partition:=null)as _temp_var
+                order by reply_under,createdAt
+        ) as t
+        inner join user as u on u.id=t.author_id
+        ${ !!currentUserId ?
+            " left join topic_user_opinion as o on o.scope='comment' and o.topic_id=t.id and  o.user_id=:currentUserId " :
+            " "
+        }
+        where row_number <= :replySize
+    `;
+    const replacements={
+        scope,
+        topicId,
+        offset:(page-1)*size,
+        commentSize:size,
+        replySize:replySize,
+        currentUserId,
+    };
 
     // 筛选出指定分页条件下的所有顶级评论的某分页下的次级回复
-    const rows= domain.sequelize.query(
-        `
-        select t.*,row_number, 
-            u.username as author_username, 
-            u.email as author_email, 
-            u.roles as author_roles, 
-            u.state as author_state 
-        from
-            (select 
-                x.id as id,x.content,x.upvotes,x.downvotes,x.author_id as author_id,x.scope as scope,x.topic_id as topicId,x.reply_to as replyTo,x.reply_under as replyUnder,x.createdAt as createdAt,x.updatedAt as updatedAt
-                ,IF(@partition=x.reply_under,@rank:=@rank+1,@rank:=1) as row_number
-                ,@partition:=x.reply_under as under
-                from 
-                    (select r.*
-                        from 
-                            (select * from comment
-                                where comment.reply_to is null
-                                    and comment.reply_under is null
-                                    and scope=:scope
-                                    and topic_id=:topicId
-                                order by createdAt asc
-                                limit :offset , :commentSize
-                            )as c  -- 特定scope及topicId下的顶级评论
-                        inner join comment as r 
-                        on r.reply_under = c.id
-                    ) as x , -- 特定scope及topicId的所有顶级评论下的全部回复
-                    (select @rank:=0,@partition:=null)as _temp_var
-                    order by reply_under,createdAt
-            ) as t
-            inner join user as u on u.id=t.author_id
-            where row_number <= :replySize
-        `,
-            {
-                replacements:{
-                    scope,
-                    topicId,
-                    offset:(page-1)*size,
-                    commentSize:size,
-                    replySize:replySize,
-                },
-                type: domain.sequelize.QueryTypes.SELECT  
-            }
+    const rows= domain.sequelize.query( 
+        rowsSQL,
+        {
+            replacements,
+            type: domain.sequelize.QueryTypes.SELECT  
+        }
     );
     // 筛选出指定分页条件下的所有顶级评论的次级回复的计数
     const counts=domain.sequelize.query(
@@ -203,13 +217,7 @@ function listAllReplies(scope,topicId,page=1,size=10,replySize=10){
         group by r.reply_under
         `,
         {
-            replacements:{
-                scope,
-                topicId,
-                offset:(page-1)*size,
-                commentSize:size,
-                replySize:replySize,
-            },
+            replacements,
             type: domain.sequelize.QueryTypes.SELECT             
         }
     );
