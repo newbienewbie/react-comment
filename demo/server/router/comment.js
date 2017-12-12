@@ -36,13 +36,14 @@ router.post('/list',bodyParser.json(),function(req,res,next){
     if(!replyTo){
         replyTo=null;
     }
+    const currentUserId=req.session.userid;
     let p=null;
     // 如果指定了 replyUnder 且 不为 null，则意味着是要获取某个顶级评论下的所有回复
     if(!!replyUnder){
-        p=commentService.listByReplyUnder(scope,topicId,replyUnder,page,size);
+        p=commentService.listByReplyUnder(scope,topicId,replyUnder,page,size,currentUserId);
     }
     else{
-        p=commentService.listByTopicId(scope,topicId,replyTo,page,size)
+        p=commentService.listByTopicId(scope,topicId,replyTo,page,size,currentUserId)
     }
 
     return p.then(result=>{
