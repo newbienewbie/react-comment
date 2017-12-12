@@ -87,7 +87,7 @@ function findById(id){
  * @param {Number} size 
  * @return {Object} {rows:[],count:null}
  */
-function listByTopicId(scope,topicId,replyTo=null,page=1,size=10){
+function listByTopicId(scope,topicId,replyTo=null,page=1,size=10,currentUserId){
     return domain.comment.findAndCount({
         where:{scope:scope,topicId:topicId,replyTo:replyTo},
         limit:size,
@@ -98,7 +98,45 @@ function listByTopicId(scope,topicId,replyTo=null,page=1,size=10){
         include:[
             {model:domain.user,as:'author'}
         ],
+    }).then(result=>{
+        const {rows,count}=result;
+        return attachUserOpinion(currentUserId,rows)
+            .then(rows=>{return  {rows,count};} );
     });
+}
+
+
+/**
+ * 
+ * @param {Number} userId 
+ * @param {ArrayLike} comments 
+ */
+function attachUserOpinion(userId,comments=[]){
+    if(!!userId && !!comments && Array.isArray(comments) && comments.length>0){
+        const ids=comments.map(r=>r.id);
+        // 获取此人关于这些评论的相关意见
+        return userOpinion.getOpinionListOfUserAndTopcIds("comment",ids,userId)
+            // 附加到comments里
+            .then(opinions=>{
+                comments=JSON.parse(JSON.stringify(comments));
+                if(opinions && Array.isArray(opinions)){
+                    opinions.forEach(o=>{
+                        for(let i=0;i<comments.length;i++){
+                            if( comments[i].id==o.topicId ){
+                                comments[i].opinion=o.opinion;
+                                break;
+                            }
+                        }
+                    });
+                }
+                else{
+                    comments.forEach(r=>{ r.opinion=null; });
+                }
+                return comments;
+            })
+    }else{
+        return Promise.resolve(comments);
+    }
 }
 
 /**
@@ -109,7 +147,7 @@ function listByTopicId(scope,topicId,replyTo=null,page=1,size=10){
  * @param {Number} page 
  * @param {Number} size 
  */
-function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10){
+function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10,currentUserId){
     return domain.comment.findAndCount({
         where:{scope,topicId,replyUnder},
         limit:size,
@@ -120,6 +158,12 @@ function listByReplyUnder(scope,topicId,replyUnder,page=1,size=10){
         include:[
             {model:domain.user,as:'author'}
         ],
+    }).then(result=>{
+        const {rows,count}=result;
+        return attachUserOpinion(currentUserId,rows)
+            .then(rows=>{
+                return {rows,count};
+            });
     });
 }
 
