@@ -367,7 +367,13 @@ function like(userId,commentId){
                         return findById(c.id);
                     }),
                     userOpinion.like("comment",commentId,userId)
-                ]);
+                ])
+                .then(results=>{
+                    const comment=JSON.parse(JSON.stringify(results[0])) ;
+                    const o=results[1];
+                    comment.opinion=o.opinion;
+                    return comment;
+                });
             }else{
                 return false;
             }
@@ -413,7 +419,12 @@ function hate(userId,commentId){
                         return findById(c.id);
                     }),
                     userOpinion.hate("comment",commentId,userId),
-                ]);
+                ]).then(results=>{
+                    const comment=JSON.parse(JSON.stringify(results[0])) ;
+                    const o=results[1];
+                    comment.opinion=o.opinion;
+                    return comment;
+                });
             }else{
                 return false;
             }
