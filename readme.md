@@ -1,7 +1,7 @@
 # react-comment
 
 前端评论组件，支持分页。带后端 demo server 。
-
+![screenshot](https://github.com/newbienewbie/react-comment/raw/master/demo.gif)
 
 ## 安装与使用
 
